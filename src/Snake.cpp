@@ -2,13 +2,20 @@
 
 namespace SnakeGame{
 
+    Snake &Snake::Instance(){
+
+        static Snake instance;
+        return instance;
+
+    }
+
     Snake::Snake(){
-        body.push_back(SDL_Point{static_cast<int32_t>(GRID_WIDTH / 2), static_cast<int32_t>(GRID_HEIGHT / 2)});
+        body.push_front(SDL_Point{static_cast<int32_t>(GRID_WIDTH / 2), static_cast<int32_t>(GRID_HEIGHT / 2)});
     }
 
     void Snake::Update(){
 
-        moved += 0.1f;
+        moved += speed;
         if(moved < 1) return;
 
         moved = 0.0f;
@@ -17,40 +24,32 @@ namespace SnakeGame{
         switch(direction){
 
             case Direction::UP:
-                body.push_back(SDL_Point{body.back().x, body.back().y - 1});
+                body.push_front(SDL_Point{body.front().x, body.front().y - 1});
                 break;
 
             case Direction::DOWN:
-                body.push_back(SDL_Point{body.back().x, body.back().y + 1});
+                body.push_front(SDL_Point{body.front().x, body.front().y + 1});
                 break;
 
             case Direction::LEFT:
-                body.push_back(SDL_Point{body.back().x - 1, body.back().y});
+                body.push_front(SDL_Point{body.front().x - 1, body.front().y});
                 break;
 
             case Direction::RIGHT:
-                body.push_back(SDL_Point{body.back().x + 1, body.back().y});
+                body.push_front(SDL_Point{body.front().x + 1, body.front().y});
                 break;
 
         }
 
-        if(!growing) body.erase(body.begin());
-        else growing = false;
-
-        if(body.back().x < 0 || body.back().x >= GRID_WIDTH || body.back().y < 0 || body.back().y >= GRID_HEIGHT){
-
-            alive = false;
-            return;
+        if(!growing) body.pop_back();
+        else{
+            
+            if(speed < 1.0f) speed += 0.002f;
+            growing = false;
 
         }
 
-        for(std::size_t i = 0; i < body.size() - 1; ++i)
-            if(body[i].x == body.back().x && body[i].y == body.back().y){
-
-                alive = false;
-                return;
-
-            }
+        if(ColidedWithBody() || ColidedWithWall()) alive = false;
 
     }
 
@@ -67,20 +66,34 @@ namespace SnakeGame{
 
     }
 
-    std::vector<SDL_Point> const &Snake::GetBody() const{
+    std::list<SDL_Point> const &Snake::GetBody() const{
         return body;
     }
 
     SDL_Point Snake::GetHeadPos() const{
-        return body.back();
+        return body.front();
     }
 
-    std::size_t Snake::size() const{
+    std::size_t Snake::Size() const{
         return body.size();
     }
 
     bool Snake::IsAlive() const{
         return alive;
+    }
+    
+    bool Snake::ColidedWithBody() const{
+
+        for(std::list<SDL_Point>::const_iterator iter = ++body.begin(); iter != body.end(); ++iter)
+            if(iter -> x == body.front().x && iter -> y == body.front().y)
+                return true;
+
+        return false;
+
+    }
+
+    bool Snake::ColidedWithWall() const{
+        return body.front().x < 0 || body.front().x >= GRID_WIDTH || body.front().y < 0 || body.front().y >= GRID_HEIGHT;
     }
 
 }

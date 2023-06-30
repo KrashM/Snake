@@ -6,9 +6,16 @@ namespace SnakeGame{
 
     class Renderer{
 
+    // Singleton Pattern
+    public:
+        static Renderer &Instance();
+
+    // Remove Public Construction
+    private:
+        Renderer();
+
     // Life Cycle
     public:
-        Renderer();
         Renderer(Renderer const &) = delete;
         Renderer(Renderer &&) = delete;
         ~Renderer();
@@ -20,8 +27,8 @@ namespace SnakeGame{
 
     // Public Mutators
     public:
-        void Render(Snake const &snake, SDL_Point const food);
         void UpdateWindowTitle(int32_t score, int32_t fps);
+        void Render(SDL_Point const food);
 
     // Private Fields
     private:

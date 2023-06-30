@@ -2,22 +2,33 @@
 
 namespace SnakeGame{
 
+    Game &Game::Instance(){
+
+        static Game instance;
+        return instance;
+
+    }
+
     Game::Game(): engine(dev()), random_w(0, GRID_WIDTH - 1), random_h(0, GRID_HEIGHT - 1){
         PlaceFood();
     }
 
-    void Game::Run(Controller const &controller, Renderer &renderer){
+    std::size_t Game::GetScore() const{
+        return Snake::Instance().Size();
+    }
 
-        uint32_t title_timestamp = SDL_GetTicks(), frame_start, frame_end, frame_duration;
-        int32_t frame_count = 0;
+    void Game::Run(){
+
+        uint32_t title_timestamp = SDL_GetTicks(), frame_start, frame_end, frame_duration, frame_count = 0;
         bool running = true;
+        Renderer::Instance();
 
         while(running){
 
             frame_start = SDL_GetTicks();
 
-            controller.HandleInput(running, snake);
-            renderer.Render(snake, food);
+            Controller::Instance().HandleInput(running);
+            Renderer::Instance().Render(food);
             Update();
 
             frame_end = SDL_GetTicks();
@@ -27,7 +38,7 @@ namespace SnakeGame{
 
             if(frame_end - title_timestamp >= 1000){
 
-                renderer.UpdateWindowTitle(snake.size(), frame_count);
+                Renderer::Instance().UpdateWindowTitle(Snake::Instance().Size(), frame_count);
                 frame_count = 0;
                 title_timestamp = frame_end;
 
@@ -39,11 +50,9 @@ namespace SnakeGame{
 
     }
 
-    std::size_t Game::GetScore() const{
-        return snake.size();
-    }
-
     void Game::PlaceFood(){
+
+        if(occupied_squares == GRID_HEIGHT * GRID_WIDTH) return;
 
         int32_t x, y;
 
@@ -52,7 +61,7 @@ namespace SnakeGame{
             x = static_cast<int32_t>(random_w(engine));
             y = static_cast<int32_t>(random_h(engine));
 
-        }while(snake.Ocupied(x, y));
+        }while(Snake::Instance().Ocupied(x, y));
 
         food.x = x;
         food.y = y;
@@ -61,6 +70,8 @@ namespace SnakeGame{
 
     void Game::Update(){
 
+        Snake &snake = Snake::Instance();
+
         if(!snake.IsAlive()) return;
         snake.Update();
 
@@ -68,6 +79,7 @@ namespace SnakeGame{
 
             PlaceFood();
             snake.Grow();
+            ++occupied_squares;
 
         }
 

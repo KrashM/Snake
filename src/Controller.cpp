@@ -1,8 +1,15 @@
 #include "../headers/Controller.hpp"
 
 namespace SnakeGame{
+    
+    Controller &Controller::Instance(){
 
-    void Controller::HandleInput(bool &running, Snake &snake) const{
+        static Controller instance;
+        return instance;
+
+    }
+
+    void Controller::HandleInput(bool &running) const{
 
         SDL_Event e;
         std::size_t i = 0;
@@ -14,19 +21,19 @@ namespace SnakeGame{
                 switch(e.key.keysym.sym){
 
                     case SDLK_UP:
-                        ChangeDirection(snake, Direction::UP, Direction::DOWN);
+                        ChangeDirection(Direction::UP, Direction::DOWN);
                         break;
 
                     case SDLK_DOWN:
-                        ChangeDirection(snake, Direction::DOWN, Direction::UP);
+                        ChangeDirection(Direction::DOWN, Direction::UP);
                         break;
 
                     case SDLK_LEFT:
-                        ChangeDirection(snake, Direction::LEFT, Direction::RIGHT);
+                        ChangeDirection(Direction::LEFT, Direction::RIGHT);
                         break;
 
                     case SDLK_RIGHT:
-                        ChangeDirection(snake, Direction::RIGHT, Direction::LEFT);
+                        ChangeDirection(Direction::RIGHT, Direction::LEFT);
                         break;
 
                 }
@@ -35,9 +42,9 @@ namespace SnakeGame{
 
     }
 
-    void Controller::ChangeDirection(Snake &snake, Direction input, Direction opposite) const{
+    void Controller::ChangeDirection(Direction input, Direction opposite) const{
 
-        if(snake.direction != opposite || snake.size() == 1) snake.direction_change = input;
+        if(Snake::Instance().direction != opposite || Snake::Instance().Size() == 1) Snake::Instance().direction_change = input;
         return;
 
     }

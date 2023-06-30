@@ -4,6 +4,13 @@
 
 namespace SnakeGame{
 
+    Renderer &Renderer::Instance(){
+
+        static Renderer instance;
+        return instance;
+
+    }
+
     Renderer::Renderer(){
 
         if(SDL_Init(SDL_INIT_VIDEO) < 0){
@@ -42,7 +49,14 @@ namespace SnakeGame{
 
     }
 
-    void Renderer::Render(Snake const &snake, SDL_Point const food){
+    void Renderer::UpdateWindowTitle(int32_t const score, int32_t const fps){
+
+        std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
+        SDL_SetWindowTitle(sdl_window, title.c_str());
+
+    }
+
+    void Renderer::Render(SDL_Point const food){
 
         SDL_Rect block;
         block.w = static_cast<int32_t>(WINDOW_WIDTH / GRID_WIDTH);
@@ -57,7 +71,7 @@ namespace SnakeGame{
         SDL_RenderFillRect(sdl_renderer, &block);
 
         SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-        for(SDL_Point const &point : snake.GetBody()){
+        for(SDL_Point const &point : Snake::Instance().GetBody()){
 
             block.x = point.x * block.w;
             block.y = point.y * block.h;
@@ -65,21 +79,14 @@ namespace SnakeGame{
 
         }
 
-        block.x = snake.GetHeadPos().x * block.w;
-        block.y = snake.GetHeadPos().y * block.h;
+        block.x = Snake::Instance().GetHeadPos().x * block.w;
+        block.y = Snake::Instance().GetHeadPos().y * block.h;
 
-        if(snake.IsAlive()) SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
+        if(Snake::Instance().IsAlive()) SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
         else SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
 
         SDL_RenderFillRect(sdl_renderer, &block);
         SDL_RenderPresent(sdl_renderer);
-
-    }
-
-    void Renderer::UpdateWindowTitle(int32_t const score, int32_t const fps){
-
-        std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
-        SDL_SetWindowTitle(sdl_window, title.c_str());
 
     }
 

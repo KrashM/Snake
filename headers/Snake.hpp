@@ -1,17 +1,24 @@
 #pragma once
 
-#include <vector>
-#include <cstddef>
-#include <SDL2/SDL.h>
 #include "Globals.hpp"
+#include <SDL2/SDL.h>
+#include <cstddef>
+#include <list>
 
 namespace SnakeGame{
 
     class Snake{
 
+    // Singleton Pattern
+    public:
+        static Snake &Instance();
+
+    // Remove Public Construction
+    private:
+        Snake();
+
     // Life Cycle
     public:
-        Snake();
         Snake(Snake const &) = delete;
         Snake(Snake &&) = delete;
         ~Snake() = default;
@@ -29,10 +36,15 @@ namespace SnakeGame{
     // Information
     public:
         bool Ocupied(int32_t const x, int32_t const y) const;
-        std::vector<SDL_Point> const &GetBody() const;
+        std::list<SDL_Point> const &GetBody() const;
         SDL_Point GetHeadPos() const;
-        std::size_t size() const;
+        std::size_t Size() const;
         bool IsAlive() const;
+
+    // Private Information
+    private:
+        bool ColidedWithBody() const;
+        bool ColidedWithWall() const;
 
     // Public fields
     public:
@@ -41,9 +53,9 @@ namespace SnakeGame{
 
     // Private Fields
     private:
-        std::vector<SDL_Point> body;
+        std::list<SDL_Point> body;
         bool alive = true, growing = false;
-        float moved = 0.0f;
+        float moved = 0.0f, speed = 0.1f;
 
     };
 

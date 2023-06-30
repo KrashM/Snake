@@ -8,10 +8,17 @@
 namespace SnakeGame{
 
     class Game{
-    
+
+    // Singleton Pattern
+    public:
+        static Game &Instance();
+
+    // Remove Public Construction
+    private:
+        Game();
+
     // Life Cycle
     public:
-        Game();
         Game(Game const &) = default;
         Game(Game &&) = default;
         ~Game() = default;
@@ -23,8 +30,8 @@ namespace SnakeGame{
     
     // Public Mutators
     public:
-        void Run(Controller const &controller, Renderer &renderer);
         std::size_t GetScore() const;
+        void Run();
     
     // Private Mutators
     private:
@@ -33,8 +40,8 @@ namespace SnakeGame{
 
     // Private Fields
     private:
-        Snake snake;
         SDL_Point food;
+        std::size_t occupied_squares = 1;
         std::random_device dev;
         std::mt19937 engine;
         std::uniform_int_distribution<std::size_t> random_w, random_h;
