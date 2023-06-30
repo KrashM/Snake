@@ -12,14 +12,14 @@ namespace SnakeGame{
     // Life Cycle
     public:
         Snake();
-        Snake(Snake const &) = default;
-        Snake(Snake &&) = default;
+        Snake(Snake const &) = delete;
+        Snake(Snake &&) = delete;
         ~Snake() = default;
 
     // Operators
     public:
-        Snake &operator =(Snake const &) = default;
-        Snake &operator =(Snake &&) = default;
+        Snake &operator =(Snake const &) = delete;
+        Snake &operator =(Snake &&) = delete;
     
     // Mutators
     public:
@@ -28,17 +28,22 @@ namespace SnakeGame{
     
     // Information
     public:
-        bool IsAlive() const;
-        std::size_t size() const;
         bool Ocupied(int32_t const x, int32_t const y) const;
-        SDL_Point GetHeadPos() const;
         std::vector<SDL_Point> const &GetBody() const;
+        SDL_Point GetHeadPos() const;
+        std::size_t size() const;
+        bool IsAlive() const;
 
-    // Fields
+    // Public fields
+    public:
+        Direction direction = Direction::UP;
+        Direction direction_change;
+
+    // Private Fields
     private:
         std::vector<SDL_Point> body;
-        Direction direction = Direction::UP;
         bool alive = true, growing = false;
+        float moved = 0.0f;
 
     };
 

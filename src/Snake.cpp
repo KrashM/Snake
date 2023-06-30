@@ -1,14 +1,19 @@
 #include "../headers/Snake.hpp"
-#include <cstddef>
 
 namespace SnakeGame{
 
     Snake::Snake(){
-        body.push_back(SDL_Point{GRID_WIDTH / 2, GRID_HEIGHT / 2});
+        body.push_back(SDL_Point{static_cast<int32_t>(GRID_WIDTH / 2), static_cast<int32_t>(GRID_HEIGHT / 2)});
     }
 
     void Snake::Update(){
-        
+
+        moved += 0.1f;
+        if(moved < 1) return;
+
+        moved = 0.0f;
+        direction = direction_change;
+
         switch(direction){
 
             case Direction::UP:
@@ -29,7 +34,10 @@ namespace SnakeGame{
 
         }
 
-        if(0 < body.back().x || body.back().x >= GRID_WIDTH || body.back().y < 0 || body.back().y >= GRID_HEIGHT){
+        if(!growing) body.erase(body.begin());
+        else growing = false;
+
+        if(body.back().x < 0 || body.back().x >= GRID_WIDTH || body.back().y < 0 || body.back().y >= GRID_HEIGHT){
 
             alive = false;
             return;
@@ -44,27 +52,10 @@ namespace SnakeGame{
 
             }
 
-        if(growing){
-
-            growing = false;
-            return;
-
-        }
-
-        body.erase(body.begin());
-
     }
 
     void Snake::Grow(){
         growing = true;
-    }
-
-    std::size_t Snake::size() const{
-        return body.size();
-    }
-
-    bool Snake::IsAlive() const{
-        return alive;
     }
 
     bool Snake::Ocupied(int32_t const x, int32_t const y) const{
@@ -76,12 +67,20 @@ namespace SnakeGame{
 
     }
 
+    std::vector<SDL_Point> const &Snake::GetBody() const{
+        return body;
+    }
+
     SDL_Point Snake::GetHeadPos() const{
         return body.back();
     }
 
-    std::vector<SDL_Point> const &Snake::GetBody() const{
-        return body;
+    std::size_t Snake::size() const{
+        return body.size();
+    }
+
+    bool Snake::IsAlive() const{
+        return alive;
     }
 
 }

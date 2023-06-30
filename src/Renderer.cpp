@@ -45,8 +45,8 @@ namespace SnakeGame{
     void Renderer::Render(Snake const &snake, SDL_Point const food){
 
         SDL_Rect block;
-        block.w = WINDOW_WIDTH / GRID_WIDTH;
-        block.h = WINDOW_HEIGHT / GRID_HEIGHT;
+        block.w = static_cast<int32_t>(WINDOW_WIDTH / GRID_WIDTH);
+        block.h = static_cast<int32_t>(WINDOW_HEIGHT / GRID_HEIGHT);
 
         SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
         SDL_RenderClear(sdl_renderer);
@@ -65,8 +65,8 @@ namespace SnakeGame{
 
         }
 
-        block.x = static_cast<int32_t>(snake.GetHeadPos().x) * block.w;
-        block.y = static_cast<int32_t>(snake.GetHeadPos().y) * block.h;
+        block.x = snake.GetHeadPos().x * block.w;
+        block.y = snake.GetHeadPos().y * block.h;
 
         if(snake.IsAlive()) SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
         else SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
