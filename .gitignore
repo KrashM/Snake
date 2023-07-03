@@ -31,9 +31,12 @@
 *.out
 *.app
 
-#Scripts
+# Scripts
 *.bat
 *.sh
 
-#.vscode
+# .vscode
 .vscode
+
+# Lib folder
+!SDL/lib/*
