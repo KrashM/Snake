@@ -12,7 +12,6 @@ namespace SnakeGame{
     void Controller::HandleInput(bool &running) const{
 
         SDL_Event e;
-        std::size_t i = 0;
 
         while(SDL_PollEvent(&e)){
 
