@@ -40,3 +40,7 @@
 
 # Lib folder
 !SDL/lib/*
+
+# DLL needed to run the executable
+!SDL2_ttf.dll
+!SDL2.dll
