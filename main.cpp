@@ -1,6 +1,4 @@
-#include <iostream>
 #include "headers/Game.hpp"
-#include "headers/Renderer.hpp"
 
 int main(int argc, char **argv){
 
