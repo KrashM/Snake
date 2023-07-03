@@ -9,7 +9,7 @@ namespace SnakeGame{
 
     }
 
-    void Controller::HandleInput(bool &running) const{
+    void Controller::HandleInput(bool &running, bool &restarting) const{
 
         SDL_Event e;
 
@@ -33,6 +33,10 @@ namespace SnakeGame{
 
                     case SDLK_RIGHT:
                         ChangeDirection(Direction::RIGHT, Direction::LEFT);
+                        break;
+                    
+                    case SDLK_RETURN:
+                        if(!Snake::Instance().IsAlive()) restarting = true;
                         break;
 
                 }

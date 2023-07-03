@@ -30,6 +30,7 @@ namespace SnakeGame{
     
     // Mutators
     public:
+        void Restart();
         void Update();
         void Grow();
     
@@ -45,6 +46,7 @@ namespace SnakeGame{
     private:
         bool ColidedWithBody() const;
         bool ColidedWithWall() const;
+        void Initialize();
 
     // Public fields
     public:

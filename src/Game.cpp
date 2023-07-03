@@ -20,14 +20,21 @@ namespace SnakeGame{
     void Game::Run(){
 
         uint32_t title_timestamp = SDL_GetTicks(), frame_start, frame_end, frame_duration, frame_count = 0;
-        bool running = true;
+        bool running = true, restarting;
         Renderer::Instance();
 
         while(running){
 
             frame_start = SDL_GetTicks();
 
-            Controller::Instance().HandleInput(running);
+            Controller::Instance().HandleInput(running, restarting);
+            if(restarting){
+
+                Snake::Instance().Restart();
+                PlaceFood();
+                restarting = false;
+
+            }
             Renderer::Instance().Render(food);
             Update();
 

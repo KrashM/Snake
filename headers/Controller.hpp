@@ -20,7 +20,7 @@ namespace SnakeGame{
 
     // Public Interface
     public:
-        void HandleInput(bool &running) const;
+        void HandleInput(bool &running, bool &restarting) const;
 
     // Private Interface
     private:

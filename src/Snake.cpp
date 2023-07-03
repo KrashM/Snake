@@ -9,8 +9,13 @@ namespace SnakeGame{
 
     }
 
-    Snake::Snake(){
-        body.push_front(SDL_Point{static_cast<int32_t>(GRID_WIDTH / 2), static_cast<int32_t>(GRID_HEIGHT / 2)});
+    Snake::Snake(){ Initialize(); }
+
+    void Snake::Restart(){
+
+        body.clear();
+        Initialize();
+
     }
 
     void Snake::Update(){
@@ -94,6 +99,14 @@ namespace SnakeGame{
 
     bool Snake::ColidedWithWall() const{
         return body.front().x < 0 || body.front().x >= GRID_WIDTH || body.front().y < 0 || body.front().y >= GRID_HEIGHT;
+    }
+
+    void Snake::Initialize(){
+
+        body.push_front(SDL_Point{static_cast<int32_t>(GRID_WIDTH / 2), static_cast<int32_t>(GRID_HEIGHT / 2)});
+        alive = true, growing = false;
+        moved = 0.0f, speed = 0.1f;
+
     }
 
 }
